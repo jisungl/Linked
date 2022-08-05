@@ -30,6 +30,9 @@ public class SignupActivity extends AppCompatActivity {
         Spinner gradeLevel = findViewById(R.id.grade);
         Button newAcc = findViewById(R.id.newAcc);
 
+        newAccType.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+        gradeLevel.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+
         newAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

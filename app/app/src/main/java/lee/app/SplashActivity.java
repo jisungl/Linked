@@ -1,6 +1,8 @@
 package lee.app;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.view.ViewTreeObserver;
 
@@ -12,54 +14,19 @@ public class SplashActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Set the layout for the content view.
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_splash);
+        getSupportActionBar().hide();
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                //This method will be executed once the timer is over
+                // Start your app main activity
+                Intent i = new Intent(SplashActivity.this, MainActivity.class);
+                startActivity(i);
+                // close this activity
+                finish();
+            }
+        }, 2000);
 
-        // Set up an OnPreDrawListener to the root view.
-        final View content = findViewById(android.R.id.content);
-        content.getViewTreeObserver().addOnPreDrawListener(
-                new ViewTreeObserver.OnPreDrawListener() {
-                    @Override
-                    public boolean onPreDraw() {
-                        // Check if the initial data is ready.
-                        if (mViewModel.isReady()) {
-                            // The content is ready; start drawing.
-                            content.getViewTreeObserver().removeOnPreDrawListener(this);
-                            return true;
-                        } else {
-                            // The content is not ready; suspend.
-                            return false;
-                        }
-                    }
-                });
     }
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        // ...
-
-        // Add a callback that's called when the splash screen is animating to
-        // the app content.
-        getSplashScreen().setOnExitAnimationListener(splashScreenView -> {
-            final ObjectAnimator slideUp = ObjectAnimator.ofFloat(
-                    splashScreenView,
-                    View.TRANSLATION_Y,
-                    0f,
-                    -splashScreenView.getHeight()
-            );
-            slideUp.setInterpolator(new AnticipateInterpolator());
-            slideUp.setDuration(200L);
-
-            // Call SplashScreenView.remove at the end of your custom animation.
-            slideUp.addListener(new AnimatorListenerAdapter() {
-                @Override
-                public void onAnimationEnd(Animator animation) {
-                    splashScreenView.remove();
-                }
-            });
-
-            // Run your animation.
-            slideUp.start();
-        });
-    }
-
 }
