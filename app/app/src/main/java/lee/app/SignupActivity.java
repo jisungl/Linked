@@ -12,8 +12,11 @@ import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.util.ArrayList;
+
+import lee.app.MainViewModel.ViewState;
 
 public class SignupActivity extends AppCompatActivity {
 
@@ -22,6 +25,8 @@ public class SignupActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         getSupportActionBar().hide();
         setContentView(R.layout.activity_mainsignup);
+
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         EditText newUser = findViewById(R.id.newUser);
         EditText nameInput = findViewById(R.id.nameInput);
@@ -32,6 +37,17 @@ public class SignupActivity extends AppCompatActivity {
 
         newAccType.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         gradeLevel.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
+
+        viewModel.getSignUp().observe(this, viewState -> {
+            if (viewState == ViewState.SUCCESS) {
+                Toast.makeText(this, "Sign up successful!", Toast.LENGTH_SHORT).show();
+                finish();
+            } else if (viewState == ViewState.ALREADY_EXIST) {
+                Toast.makeText(this, "Id already exists. Try another ID", Toast.LENGTH_SHORT).show();
+            } else if (viewState == ViewState.FAILURE) {
+                Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         newAcc.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,6 +61,9 @@ public class SignupActivity extends AppCompatActivity {
                 if(currentNewUser.equals("") || currentName.equals("") || currentPass.equals("") ||
                 currentAccType.equals("") || currentGrade.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please Enter All Fields", Toast.LENGTH_SHORT).show();
+                } else {
+                    Person person = new Person(currentName, currentNewUser, currentPass, currentGrade, currentAccType);
+                    viewModel.signUp(person);
                 }
             }
         });
