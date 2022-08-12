@@ -1,11 +1,13 @@
 package lee.app;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.widget.CalendarView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -14,12 +16,8 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
 
-        CalendarView calendar;
-        TextView viewDate;
-        calendar = (CalendarView)
-                findViewById(R.id.calendarView2);
-        viewDate = (TextView)
-                findViewById(R.id.viewDate);
+        CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
+        TextView viewDate = (TextView) findViewById(R.id.viewDate);
 
         calendar.setOnDateChangeListener(
                         new CalendarView
@@ -36,8 +34,23 @@ public class CalendarActivity extends AppCompatActivity {
                                         + (month + 1) + "-" + year;
 
                                 viewDate.setText(Date);
+                                AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+                                builder.setMessage("haha")
+                                        .setPositiveButton("pos", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                // START THE GAME!
+                                            }
+                                        })
+                                        .setNegativeButton("nav", new DialogInterface.OnClickListener() {
+                                            public void onClick(DialogInterface dialog, int id) {
+                                                // User cancelled the dialog
+                                            }
+                                        });
+                                // Create the AlertDialog object and return
+                                builder.create().show();
                             }
                         });
+
     }
 
 }
