@@ -2,6 +2,8 @@ package lee.app;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +30,20 @@ public class MainActivity extends AppCompatActivity {
         Button loginButton = findViewById(R.id.login_button);
         Button createAcc = findViewById(R.id.createAcc);
         EditText passwordInput = findViewById(R.id.passwordInput);
+        passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+        Button pwdButton = findViewById(R.id.showHide);
+        pwdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(passwordInput.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                    pwdButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showpass, 0,0,0);
+                    passwordInput.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else{
+                    passwordInput.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    pwdButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.hiddenpass, 0,0,0);
+                }
+            }
+        });
         createAcc.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -35,6 +51,7 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(myIntent);
             }
         });
+        
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -55,6 +72,8 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getLogin().observe(this, viewState -> {
             if (viewState == ViewState.SUCCESS) {
                 Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
+                Intent myIntent = new Intent(MainActivity.this, CalendarActivity.class);
+                startActivity(myIntent);
             } else if (viewState == ViewState.WRONG_PASSWORD) {
                 Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show();
             } else if (viewState == ViewState.NOT_EXIST) {
@@ -63,8 +82,6 @@ public class MainActivity extends AppCompatActivity {
                 Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Toast.makeText(this, "Hi Jisung", Toast.LENGTH_SHORT).show();
     }
 }
 //public class Activity1 extends MainActivity {
