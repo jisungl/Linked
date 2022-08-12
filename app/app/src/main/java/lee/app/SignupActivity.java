@@ -1,5 +1,6 @@
 package lee.app;
 
+import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
 import android.view.View;
@@ -42,6 +43,8 @@ public class SignupActivity extends AppCompatActivity {
             if (viewState == ViewState.SUCCESS) {
                 Toast.makeText(this, "Sign up successful!", Toast.LENGTH_SHORT).show();
                 finish();
+                Intent myIntent = new Intent(SignupActivity.this, CalendarActivity.class);
+                startActivity(myIntent);
             } else if (viewState == ViewState.ALREADY_EXIST) {
                 Toast.makeText(this, "Id already exists. Try another ID", Toast.LENGTH_SHORT).show();
             } else if (viewState == ViewState.FAILURE) {
