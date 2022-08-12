@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.time.LocalDate;
+
 public class CalendarActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -30,12 +32,24 @@ public class CalendarActivity extends AppCompatActivity {
                                     int dayOfMonth)
                             {
                                 String Date
-                                        = dayOfMonth + "-"
-                                        + (month + 1) + "-" + year;
+                                        = dayOfMonth + "/"
+                                        + (month + 1) + "/" + year;
+//                                String day;
+//                                int monthName = month + 1;
+//                                if(monthName == 1) {
+//                                    day = "January";
+//                                } else if (monthName == 2) {
+//                                    day = "February";
+//                                } else if (monthName == 3) {
+//                                    day =
+//                                }
+
+                                LocalDate date = LocalDate.of(year, month, dayOfMonth);
+                                String monthName = date.getMonth().toString();
 
                                 viewDate.setText(Date);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                                builder.setMessage("Do you plan on coming on" + Date)
+                                builder.setMessage("Do you plan on coming on the " + dayOfMonth + "th of " + monthName)
                                         .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // START THE GAME!
