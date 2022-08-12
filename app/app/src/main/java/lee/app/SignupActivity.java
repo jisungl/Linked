@@ -42,9 +42,9 @@ public class SignupActivity extends AppCompatActivity {
         viewModel.getSignUp().observe(this, viewState -> {
             if (viewState == ViewState.SUCCESS) {
                 Toast.makeText(this, "Sign up successful!", Toast.LENGTH_SHORT).show();
-                finish();
                 Intent myIntent = new Intent(SignupActivity.this, CalendarActivity.class);
                 startActivity(myIntent);
+                finish();
             } else if (viewState == ViewState.ALREADY_EXIST) {
                 Toast.makeText(this, "Id already exists. Try another ID", Toast.LENGTH_SHORT).show();
             } else if (viewState == ViewState.FAILURE) {

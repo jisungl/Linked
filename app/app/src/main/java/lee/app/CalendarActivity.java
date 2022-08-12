@@ -17,7 +17,7 @@ public class CalendarActivity extends AppCompatActivity {
         CalendarView calendar;
         TextView viewDate;
         calendar = (CalendarView)
-                findViewById(R.id.calendar);
+                findViewById(R.id.calendarView2);
         viewDate = (TextView)
                 findViewById(R.id.viewDate);
 
