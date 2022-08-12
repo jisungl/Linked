@@ -35,13 +35,13 @@ public class CalendarActivity extends AppCompatActivity {
 
                                 viewDate.setText(Date);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                                builder.setMessage("haha")
-                                        .setPositiveButton("pos", new DialogInterface.OnClickListener() {
+                                builder.setMessage("Do you plan on coming on" + Date)
+                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // START THE GAME!
                                             }
                                         })
-                                        .setNegativeButton("nav", new DialogInterface.OnClickListener() {
+                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                             public void onClick(DialogInterface dialog, int id) {
                                                 // User cancelled the dialog
                                             }
