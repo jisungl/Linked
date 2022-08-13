@@ -80,12 +80,30 @@ public class Repository {
             StudySession studySession;
             if (blob.exists()) {
                 studySession = gson.fromJson(blob.downloadText(), StudySession.class);
+                List<Person> existingAttendeeList = studySession.attendees;
+                for (int i = 0; i < existingAttendeeList.size(); i++) {
+                    Person existingAttendee = existingAttendeeList.get(i);
+                    if (existingAttendee.id.equals(attendee.id)) {
+                        return new Response.AlreadyExist();
+                    }
+                }
+                studySession.attendees.add(attendee);
+                blob.uploadText(gson.toJson(studySession));
+
+                Session.person.matching.add(new Pair<String, Person>(date, null));
+                createPerson(Session.person);
+
+                return new Response.Success(studySession);
             } else {
                 studySession = new StudySession();
+                studySession.attendees.add(attendee);
+                blob.uploadText(gson.toJson(studySession));
+
+                Session.person.matching.add(new Pair<String, Person>(date, null));
+                createPerson(Session.person);
+
+                return new Response.Success(studySession);
             }
-            studySession.attendees.add(attendee);
-            blob.uploadText(gson.toJson(studySession));
-            return new Response.Success(studySession);
         } catch (Exception e) {
             return new Response.Failure();
         }

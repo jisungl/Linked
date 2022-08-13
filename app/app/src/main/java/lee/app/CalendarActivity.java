@@ -1,9 +1,12 @@
 package lee.app;
 
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Pair;
 import android.widget.CalendarView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -12,6 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
+import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
     @Override
@@ -22,6 +26,14 @@ public class CalendarActivity extends AppCompatActivity {
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
         TextView viewDate = (TextView) findViewById(R.id.viewDate);
+
+        List<Pair<String, Person>> matchingList = Session.person.matching;
+        for (int i = 0; i < matchingList.size(); i++) {
+            Pair<String, Person> matching = matchingList.get(i);
+            String date = matching.first;
+            Person tutor = matching.second;
+            Toast.makeText(this, "Your requested " + date + ". Assigned tutor is : " + tutor, Toast.LENGTH_SHORT).show();
+        }
 
         calendar.setOnDateChangeListener(
                         new CalendarView
@@ -86,6 +98,15 @@ public class CalendarActivity extends AppCompatActivity {
                             }
                         });
 
+        viewModel.getUpdateAttendee().observe(this, viewState -> {
+            if (viewState == MainViewModel.ViewState.SUCCESS) {
+                Toast.makeText(this, "Your request is accepted", Toast.LENGTH_SHORT).show();
+            } else if (viewState == MainViewModel.ViewState.ALREADY_EXIST) {
+                Toast.makeText(this, "You already requested for this date", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
 }
