@@ -25,13 +25,15 @@ public class CalendarActivity extends AppCompatActivity {
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
-        TextView viewDate = (TextView) findViewById(R.id.viewDate);
+        TextView viewDate = (TextView) findViewById(R.id.textDate);
+        TextView viewDay = (TextView) findViewById(R.id.textDay);
 
         List<Pair<String, Person>> matchingList = Session.person.matching;
         for (int i = 0; i < matchingList.size(); i++) {
             Pair<String, Person> matching = matchingList.get(i);
             String date = matching.first;
             Person tutor = matching.second;
+
             Toast.makeText(this, "Your requested " + date + ". Assigned tutor is : " + tutor, Toast.LENGTH_SHORT).show();
         }
 
@@ -52,7 +54,8 @@ public class CalendarActivity extends AppCompatActivity {
                                 String monthName = monthNameTemp.substring(0,1) +
                                                     monthNameTemp.substring(1).toLowerCase();
 
-                                viewDate.setText(Date);
+                                viewDate.setText("" + dayOfMonth);
+                                viewDay.setText(date.getDayOfWeek().toString());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
                                 String dialogMsg = "";
                                 if(date.getDayOfWeek().toString() != "SUNDAY") {

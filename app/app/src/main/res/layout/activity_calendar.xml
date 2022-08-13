@@ -6,21 +6,63 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <View
+        android:id="@+id/view2"
+        android:layout_width="50dp"
+        android:layout_height="2dp"
+        android:background="#D1D1D1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.401"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.264" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="50dp"
+        android:layout_height="2dp"
+        android:background="#D1D1D1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.603"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.264" />
+
     <CalendarView
         android:id="@+id/calendarView2"
         android:layout_width="433dp"
-        android:layout_height="455dp"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.506" />
+        app:layout_constraintVertical_bias="1.0" />
 
     <TextView
-        android:id="@+id/viewDate"
-        android:layout_width="201dp"
-        android:layout_height="146dp"
+        android:id="@+id/textDate"
+        android:layout_width="106dp"
+        android:layout_height="65dp"
+        android:gravity="center"
         android:text="TextView"
-        tools:layout_editor_absoluteX="344dp"
-        tools:layout_editor_absoluteY="245dp" />
+        app:layout_constraintBottom_toTopOf="@+id/calendarView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.336" />
+
+    <TextView
+        android:id="@+id/textDay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="TextView"
+        app:layout_constraintBottom_toTopOf="@+id/calendarView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textDate"
+        app:layout_constraintVertical_bias="0.236" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

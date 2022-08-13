@@ -15,11 +15,12 @@ public class Person {
     public String accountType;
     public List<Pair<String, Person>> matching = new ArrayList<>();
 
-    public Person(String name, String id, String password, String grade, String accountType) {
+    public Person(String name, String id, String password, String grade, String accountType, List<Pair<String, Person>> matching) {
         this.name = name;
         this.id = id;
         this.password = password;
         this.grade = grade;
         this.accountType = accountType;
+        this.matching = matching;
     }
 }

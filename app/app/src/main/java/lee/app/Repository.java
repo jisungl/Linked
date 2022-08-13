@@ -46,12 +46,13 @@ public class Repository {
             CloudBlobContainer container = getPersonContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(person.id);
 
-            if (blob.exists()) {
-                return new Response.AlreadyExist();
-            } else {
+//            if (blob.exists()) {
+//                return new Response.AlreadyExist();
+//            } else {
                 blob.uploadText(gson.toJson(person));
+                Session.person = person;
                 return new Response.Success(person);
-            }
+//            }
         } catch (Exception e) {
             return new Response.Failure();
         }

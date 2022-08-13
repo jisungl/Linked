@@ -3,6 +3,7 @@ package lee.app;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -65,7 +66,7 @@ public class SignupActivity extends AppCompatActivity {
                 currentAccType.equals("") || currentGrade.equals("")) {
                     Toast.makeText(getApplicationContext(), "Please Enter All Fields", Toast.LENGTH_SHORT).show();
                 } else {
-                    Person person = new Person(currentName, currentNewUser, currentPass, currentGrade, currentAccType);
+                    Person person = new Person(currentName, currentNewUser, currentPass, currentGrade, currentAccType, new ArrayList<>());
                     viewModel.signUp(person);
                 }
             }
