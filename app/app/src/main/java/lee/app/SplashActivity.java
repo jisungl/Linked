@@ -16,17 +16,24 @@ public class SplashActivity extends AppCompatActivity {
         // Set the layout for the content view.
         setContentView(R.layout.activity_splash);
         getSupportActionBar().hide();
+        int delay;
+        Intent i;
+        if(Session.person == null) {
+            i = new Intent(SplashActivity.this, MainActivity.class);
+            delay = 1000;
+        } else {
+            i = new Intent(SplashActivity.this, CalendarActivity.class);
+            delay = 0;
+        }
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
                 //This method will be executed once the timer is over
                 // Start your app main activity
-                Intent i = new Intent(SplashActivity.this, MainActivity.class);
                 startActivity(i);
                 // close this activity
                 finish();
             }
-        }, 1000);
-
+        }, delay);
     }
 }

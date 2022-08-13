@@ -73,6 +73,7 @@ public class MainActivity extends AppCompatActivity {
             if (viewState == ViewState.SUCCESS) {
                 Intent myIntent = new Intent(MainActivity.this, CalendarActivity.class);
                 startActivity(myIntent);
+                finish();
             } else if (viewState == ViewState.WRONG_PASSWORD) {
                 Toast.makeText(this, "The Password is Incorrect", Toast.LENGTH_SHORT).show();
             } else if (viewState == ViewState.NOT_EXIST) {

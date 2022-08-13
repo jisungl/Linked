@@ -43,8 +43,9 @@ public class CalendarActivity extends AppCompatActivity {
                                 viewDate.setText(Date);
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
                                 String dialogMsg = "";
-
-                                if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
+                                if(date.getDayOfWeek().toString() != "SUNDAY") {
+                                    dialogMsg += "There is no class on this day";
+                                } else if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
                                     dialogMsg += "Do you plan on attending on the " + dayOfMonth + "th of " +
                                             monthName + "?";
                                 } else if (dayOfMonth % 10 == 1) {
@@ -60,19 +61,28 @@ public class CalendarActivity extends AppCompatActivity {
                                     dialogMsg = "Do you plan on attending on the " + dayOfMonth + "th of " +
                                             monthName + "?";
                                 }
-                                builder.setMessage(dialogMsg)
-                                        .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                // START THE GAME!
-                                            }
-                                        })
-                                        .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                                            public void onClick(DialogInterface dialog, int id) {
-                                                // User cancelled the dialog
-                                            }
-                                        });
-                                // Create the AlertDialog object and return
-                                builder.create().show();
+                                if(date.getDayOfWeek().toString() == "SUNDAY") {
+                                    builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // START THE GAME!
+                                        }
+                                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User cancelled the dialog
+                                        }
+                                    });
+                                    // Create the AlertDialog object and return
+                                    builder.create().show();
+                                } else {
+                                    builder.setMessage(dialogMsg).setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            // User cancelled the dialog
+                                        }
+                                    });
+                                    // Create the AlertDialog object and return
+                                    builder.create().show();
+                                }
+
                             }
                         });
 
