@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
 
@@ -17,6 +18,7 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
         TextView viewDate = (TextView) findViewById(R.id.viewDate);
@@ -31,9 +33,7 @@ public class CalendarActivity extends AppCompatActivity {
                                     int month,
                                     int dayOfMonth)
                             {
-                                String Date
-                                        = dayOfMonth + "/"
-                                        + (month + 1) + "/" + year;
+                                String Date = year + "-" + (month + 1) + "-" + dayOfMonth;
 //
                                 LocalDate date = LocalDate.of(year, month+1, dayOfMonth);
                                 String monthNameTemp = date.getMonth().toString();
@@ -64,7 +64,7 @@ public class CalendarActivity extends AppCompatActivity {
                                 if(date.getDayOfWeek().toString() == "SUNDAY") {
                                     builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
-                                            // START THE GAME!
+                                            viewModel.updateAttendee(Date);
                                         }
                                     }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {

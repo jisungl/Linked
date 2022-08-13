@@ -77,7 +77,12 @@ public class Repository {
         try {
             CloudBlobContainer container = getStudySessionContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(date);
-            StudySession studySession = gson.fromJson(blob.downloadText(), StudySession.class);
+            StudySession studySession;
+            if (blob.exists()) {
+                studySession = gson.fromJson(blob.downloadText(), StudySession.class);
+            } else {
+                studySession = new StudySession();
+            }
             studySession.attendees.add(attendee);
             blob.uploadText(gson.toJson(studySession));
             return new Response.Success(studySession);
