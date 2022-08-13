@@ -71,31 +71,15 @@ public class MainActivity extends AppCompatActivity {
 
         viewModel.getLogin().observe(this, viewState -> {
             if (viewState == ViewState.SUCCESS) {
-                Toast.makeText(this, "Login success", Toast.LENGTH_SHORT).show();
                 Intent myIntent = new Intent(MainActivity.this, CalendarActivity.class);
                 startActivity(myIntent);
             } else if (viewState == ViewState.WRONG_PASSWORD) {
-                Toast.makeText(this, "Wrong password", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "The Password is Incorrect", Toast.LENGTH_SHORT).show();
             } else if (viewState == ViewState.NOT_EXIST) {
-                Toast.makeText(this, "Id doesn't exist", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "That username does not exist", Toast.LENGTH_SHORT).show();
             } else {
                 Toast.makeText(this, "Something went wrong. Please try again.", Toast.LENGTH_SHORT).show();
             }
         });
     }
 }
-//public class Activity1 extends MainActivity {
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_mainsignup);
-//
-//        Button next = (Button) findViewById(R.id.createAcc);
-//        next.setOnClickListener(new View.OnClickListener() {
-//            public void onClick(View view) {
-//                Intent myIntent = new Intent(view.getContext(), Activity1.class);
-//                startActivityForResult(myIntent, 0);
-//            }
-//        });
-//    }
-//}
