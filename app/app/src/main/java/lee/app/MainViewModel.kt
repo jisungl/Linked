@@ -1,6 +1,5 @@
 package lee.app
 
-import androidx.constraintlayout.motion.utils.ViewState
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,6 +10,7 @@ class MainViewModel: ViewModel() {
     private val repository = Repository()
     val login = MutableLiveData<ViewState>()
     val signUp = MutableLiveData<ViewState>()
+    val updateAttendee = MutableLiveData<ViewState>()
 
     fun login(id: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -33,6 +33,15 @@ class MainViewModel: ViewModel() {
             when (repository.createPerson(person)) {
                 is Response.Success<Person> -> signUp.postValue(ViewState.SUCCESS )
                 is Response.AlreadyExist -> signUp.postValue(ViewState.ALREADY_EXIST)
+                else -> signUp.postValue(ViewState.FAILURE)
+            }
+        }
+    }
+
+    fun updateAttendee(date: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (repository.updateAttendee(date, Session.person)) {
+                is Response.Success<StudySession> -> signUp.postValue(ViewState.SUCCESS )
                 else -> signUp.postValue(ViewState.FAILURE)
             }
         }

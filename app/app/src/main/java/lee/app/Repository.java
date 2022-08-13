@@ -73,7 +73,7 @@ public class Repository {
         }
     }
 
-    public Response<StudySession> updateAttendeeToStudySession(String date, Person attendee) {
+    public Response<StudySession> updateAttendee(String date, Person attendee) {
         try {
             CloudBlobContainer container = getStudySessionContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(date);
@@ -86,7 +86,7 @@ public class Repository {
         }
     }
 
-    public Response<StudySession> updateMatchingResultToStudySession(String date, List<Pair<Person, Person>> matching) throws URISyntaxException, InvalidKeyException, StorageException, IOException {
+    public Response<StudySession> updateMatchingRessult(String date, List<Pair<Person, Person>> matching) throws URISyntaxException, InvalidKeyException, StorageException, IOException {
         try {
             CloudBlobContainer container = getStudySessionContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(date);
