@@ -27,15 +27,8 @@ public class CalendarActivity extends AppCompatActivity {
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
         TextView viewDate = (TextView) findViewById(R.id.textDate);
         TextView viewDay = (TextView) findViewById(R.id.textDay);
+        TextView viewTutor = (TextView) findViewById(R.id.textTutor);
 
-        List<Pair<String, Person>> matchingList = Session.person.matching;
-        for (int i = 0; i < matchingList.size(); i++) {
-            Pair<String, Person> matching = matchingList.get(i);
-            String date = matching.first;
-            Person tutor = matching.second;
-
-            Toast.makeText(this, "Your requested " + date + ". Assigned tutor is : " + tutor, Toast.LENGTH_SHORT).show();
-        }
 
         calendar.setOnDateChangeListener(
                         new CalendarView
@@ -53,6 +46,18 @@ public class CalendarActivity extends AppCompatActivity {
                                 String monthNameTemp = date.getMonth().toString();
                                 String monthName = monthNameTemp.substring(0,1) +
                                                     monthNameTemp.substring(1).toLowerCase();
+                                List<Pair<String, Person>> matchingList = Session.person.matching;
+                                for (int i = 0; i < matchingList.size(); i++) {
+                                    Pair<String, Person> matching = matchingList.get(i);
+                                    String currentDate = matching.first;
+                                    Person tutor = matching.second;
+                                    if (currentDate.equals(Date)) {
+                                        viewTutor.setText("Your assigned tutor for this day is " + tutor);
+                                        Toast.makeText(CalendarActivity.this, "Your requested " + currentDate + ". Assigned tutor is : " + tutor, Toast.LENGTH_SHORT).show();
+                                    } else {
+                                        viewTutor.setText("You did not request");
+                                    }
+                                }
 
                                 viewDate.setText("" + dayOfMonth);
                                 viewDay.setText(date.getDayOfWeek().toString());
