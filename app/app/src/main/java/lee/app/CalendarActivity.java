@@ -53,7 +53,7 @@ public class CalendarActivity extends AppCompatActivity {
                                     Person tutor = matching.second;
                                     if (currentDate.equals(Date)) {
                                         viewTutor.setText("Your assigned tutor for this day is " + tutor);
-                                        Toast.makeText(CalendarActivity.this, "Your requested " + currentDate + ". Assigned tutor is : " + tutor, Toast.LENGTH_SHORT).show();
+                                        break;
                                     } else {
                                         viewTutor.setText("You did not request");
                                     }

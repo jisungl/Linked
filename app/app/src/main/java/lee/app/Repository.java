@@ -46,13 +46,26 @@ public class Repository {
             CloudBlobContainer container = getPersonContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(person.id);
 
-//            if (blob.exists()) {
-//                return new Response.AlreadyExist();
-//            } else {
+            if (blob.exists()) {
+                return new Response.AlreadyExist();
+            } else {
                 blob.uploadText(gson.toJson(person));
                 Session.person = person;
                 return new Response.Success(person);
-//            }
+            }
+        } catch (Exception e) {
+            return new Response.Failure();
+        }
+    }
+
+    private Response<Person> updatePerson(Person person)  {
+        try {
+            CloudBlobContainer container = getPersonContainer();
+            CloudBlockBlob blob = container.getBlockBlobReference(person.id);
+
+            blob.uploadText(gson.toJson(person));
+            Session.person = person;
+            return new Response.Success(person);
         } catch (Exception e) {
             return new Response.Failure();
         }
@@ -88,29 +101,21 @@ public class Repository {
                         return new Response.AlreadyExist();
                     }
                 }
-                studySession.attendees.add(attendee);
-                blob.uploadText(gson.toJson(studySession));
 
-                Session.person.matching.add(new Pair<String, Person>(date, null));
-                createPerson(Session.person);
-
-                return new Response.Success(studySession);
             } else {
                 studySession = new StudySession();
-                studySession.attendees.add(attendee);
-                blob.uploadText(gson.toJson(studySession));
-
-                Session.person.matching.add(new Pair<String, Person>(date, null));
-                createPerson(Session.person);
-
-                return new Response.Success(studySession);
             }
+            studySession.attendees.add(attendee);
+            blob.uploadText(gson.toJson(studySession));
+            Session.person.matching.add(new Pair<String, Person>(date, null));
+            updatePerson(Session.person);
+            return new Response.Success(studySession);
         } catch (Exception e) {
             return new Response.Failure();
         }
     }
 
-    public Response<StudySession> updateMatchingRessult(String date, List<Pair<Person, Person>> matching) throws URISyntaxException, InvalidKeyException, StorageException, IOException {
+    public Response<StudySession> updateMatchingResult(String date, List<Pair<Person, Person>> matching) throws URISyntaxException, InvalidKeyException, StorageException, IOException {
         try {
             CloudBlobContainer container = getStudySessionContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(date);
