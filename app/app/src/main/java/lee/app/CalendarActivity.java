@@ -3,6 +3,7 @@ package lee.app;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.format.DateFormat;
 import android.util.Pair;
 import android.widget.CalendarView;
 import android.widget.TextView;
@@ -15,6 +16,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.lifecycle.ViewModelProvider;
 
 import java.time.LocalDate;
+import java.util.Calendar;
 import java.util.List;
 
 public class CalendarActivity extends AppCompatActivity {
@@ -22,12 +24,18 @@ public class CalendarActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
+        getSupportActionBar().hide();
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
         TextView viewDate = (TextView) findViewById(R.id.textDate);
         TextView viewDay = (TextView) findViewById(R.id.textDay);
         TextView viewTutor = (TextView) findViewById(R.id.textTutor);
+        Calendar c = Calendar.getInstance();
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        viewDate.setText("" + day);
+        viewDay.setText(LocalDate.now().getDayOfWeek().name());
+
 
 
         calendar.setOnDateChangeListener(

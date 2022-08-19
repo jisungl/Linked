@@ -3,6 +3,8 @@ package lee.app;
 import android.content.Intent;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.method.HideReturnsTransformationMethod;
+import android.text.method.PasswordTransformationMethod;
 import android.util.Pair;
 import android.view.View;
 import android.widget.AdapterView;
@@ -33,9 +35,23 @@ public class SignupActivity extends AppCompatActivity {
         EditText newUser = findViewById(R.id.newUser);
         EditText nameInput = findViewById(R.id.nameInput);
         EditText newPass = findViewById(R.id.newPass);
+        newPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
         Spinner newAccType = findViewById(R.id.accountType);
         Spinner gradeLevel = findViewById(R.id.grade);
         Button newAcc = findViewById(R.id.newAcc);
+        Button pwdButton = findViewById(R.id.showhide2);
+        pwdButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(newPass.getTransformationMethod() == PasswordTransformationMethod.getInstance()){
+                    pwdButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.showpass, 0,0,0);
+                    newPass.setTransformationMethod(HideReturnsTransformationMethod.getInstance());
+                } else{
+                    newPass.setTransformationMethod(PasswordTransformationMethod.getInstance());
+                    pwdButton.setCompoundDrawablesWithIntrinsicBounds(R.drawable.hiddenpass, 0,0,0);
+                }
+            }
+        });
 
         newAccType.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
         gradeLevel.getBackground().setColorFilter(getResources().getColor(R.color.white), PorterDuff.Mode.SRC_ATOP);
