@@ -5,7 +5,10 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.format.DateFormat;
 import android.util.Pair;
+import android.view.View;
+import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,6 +28,7 @@ public class CalendarActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_calendar);
         getSupportActionBar().hide();
+
         MainViewModel viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView2);
@@ -32,6 +36,12 @@ public class CalendarActivity extends AppCompatActivity {
         TextView viewDay = (TextView) findViewById(R.id.textDay);
         TextView viewTutor = (TextView) findViewById(R.id.textTutor);
         Calendar c = Calendar.getInstance();
+        Button cancelButton = (Button) findViewById(R.id.cancelButton);
+        cancelButton.setVisibility(View.GONE);
+        TextView studentName = (TextView) findViewById(R.id.studentName);
+        Spinner tutors = (Spinner) findViewById(R.id.tutors);
+        studentName.setVisibility(View.GONE);
+        tutors.setVisibility(View.GONE);
         int day = c.get(Calendar.DAY_OF_MONTH);
         viewDate.setText("" + day);
         viewDay.setText(LocalDate.now().getDayOfWeek().name());
@@ -55,15 +65,21 @@ public class CalendarActivity extends AppCompatActivity {
                                 String monthName = monthNameTemp.substring(0,1) +
                                                     monthNameTemp.substring(1).toLowerCase();
                                 List<Pair<String, Person>> matchingList = Session.person.matching;
+                                String currentDate = "";
                                 for (int i = 0; i < matchingList.size(); i++) {
                                     Pair<String, Person> matching = matchingList.get(i);
-                                    String currentDate = matching.first;
+                                    currentDate = matching.first;
                                     Person tutor = matching.second;
                                     if (currentDate.equals(Date)) {
                                         viewTutor.setText("Your assigned tutor for this day is " + tutor);
+                                        cancelButton.setVisibility(View.VISIBLE);
                                         break;
-                                    } else {
+                                    } else if(date.getDayOfWeek().toString() == "SUNDAY") {
                                         viewTutor.setText("You did not request");
+                                        cancelButton.setVisibility(View.GONE);
+                                    } else {
+                                        viewTutor.setText("");
+                                        cancelButton.setVisibility(View.GONE);
                                     }
                                 }
 
@@ -71,8 +87,11 @@ public class CalendarActivity extends AppCompatActivity {
                                 viewDay.setText(date.getDayOfWeek().toString());
                                 AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
                                 String dialogMsg = "";
-                                if(date.getDayOfWeek().toString() != "SUNDAY") {
+                                if(currentDate.equals(Date)) {
+                                    return;
+                                } else if(date.getDayOfWeek().toString() != "SUNDAY") {
                                     dialogMsg += "There is no class on this day";
+
                                 } else if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
                                     dialogMsg += "Do you plan on attending on the " + dayOfMonth + "th of " +
                                             monthName + "?";
@@ -89,6 +108,7 @@ public class CalendarActivity extends AppCompatActivity {
                                     dialogMsg = "Do you plan on attending on the " + dayOfMonth + "th of " +
                                             monthName + "?";
                                 }
+
                                 if(date.getDayOfWeek().toString() == "SUNDAY") {
                                     builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                                         public void onClick(DialogInterface dialog, int id) {
