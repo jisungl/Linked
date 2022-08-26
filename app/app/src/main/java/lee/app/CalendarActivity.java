@@ -57,7 +57,6 @@ public class CalendarActivity extends AppCompatActivity {
         cancelButton = (Button) findViewById(R.id.cancelButton);
         cancelButton.setVisibility(View.GONE);
         studentName = (TextView) findViewById(R.id.studentName);
-        tutors = (Spinner) findViewById(R.id.tutors);
 
         viewModel.getUpdateAttendee().observe(this, viewState -> {
             if (viewState == MainViewModel.ViewState.SUCCESS) {
