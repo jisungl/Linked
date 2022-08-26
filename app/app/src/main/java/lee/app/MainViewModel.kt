@@ -41,9 +41,18 @@ class MainViewModel: ViewModel() {
     fun updateAttendee(date: String) {
         viewModelScope.launch(Dispatchers.IO) {
             when (repository.updateAttendee(date, Session.person)) {
-                is Response.Success<StudySession> -> signUp.postValue(ViewState.SUCCESS )
-                is Response.AlreadyExist -> signUp.postValue(ViewState.ALREADY_EXIST )
-                else -> signUp.postValue(ViewState.FAILURE)
+                is Response.Success<StudySession> -> updateAttendee.postValue(ViewState.SUCCESS )
+                is Response.AlreadyExist -> updateAttendee.postValue(ViewState.ALREADY_EXIST )
+                else -> updateAttendee.postValue(ViewState.FAILURE)
+            }
+        }
+    }
+
+    fun removeAttendee(date: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (repository.removeAttendee(date, Session.person)) {
+                is Response.Success<StudySession> -> updateAttendee.postValue(ViewState.SUCCESS )
+                else -> updateAttendee.postValue(ViewState.FAILURE)
             }
         }
     }

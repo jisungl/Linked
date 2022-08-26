@@ -115,6 +115,34 @@ public class Repository {
         }
     }
 
+    public Response<StudySession> removeAttendee(String date, Person attendee) {
+        try {
+            CloudBlobContainer container = getStudySessionContainer();
+            CloudBlockBlob blob = container.getBlockBlobReference(date);
+            StudySession studySession;
+            studySession = gson.fromJson(blob.downloadText(), StudySession.class);
+            List<Person> existingAttendeeList = studySession.attendees;
+            for (int i = 0; i < existingAttendeeList.size(); i++) {
+                Person existingAttendee = existingAttendeeList.get(i);
+                if (existingAttendee.id.equals(attendee.id)) {
+                    existingAttendeeList.remove(i);
+                    i--;
+                }
+            }
+            blob.uploadText(gson.toJson(studySession));
+            for (int i = 0; i < Session.person.matching.size(); i++) {
+                if (Session.person.matching.get(i).first.equals(date)) {
+                    Session.person.matching.remove(i);
+                    i--;
+                }
+            }
+            updatePerson(Session.person);
+            return new Response.Success(studySession);
+        } catch (Exception e) {
+            return new Response.Failure();
+        }
+    }
+
     public Response<StudySession> updateMatchingResult(String date, List<Pair<Person, Person>> matching) throws URISyntaxException, InvalidKeyException, StorageException, IOException {
         try {
             CloudBlobContainer container = getStudySessionContainer();
