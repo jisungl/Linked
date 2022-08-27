@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,10 +16,10 @@ import java.util.ArrayList;
 
 public class StudySessionAdapter extends RecyclerView.Adapter<StudySessionAdapter.ViewHolder> {
 
-    ArrayList<StudySession> data;
+    StudySession data;
     Context context;
 
-    public StudySessionAdapter(Context context,ArrayList<StudySession> data) {
+    public StudySessionAdapter(Context context, StudySession data) {
         this.data = data;
         this.context = context;
     }
@@ -28,13 +29,13 @@ public class StudySessionAdapter extends RecyclerView.Adapter<StudySessionAdapte
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType)
     {
         LayoutInflater layoutInflater=LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.activity_admin,parent,false);
-        ViewHolder viewHolder= new ViewHolder(view);
-        return viewHolder;
+        View view = layoutInflater.inflate(R.layout.adapter_study_session, parent,false);
+        return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        data.
 //        holder.nameTextView.setText(data.get(position).getName());
 //        holder.nameTextView.setOnClickListener(new View.OnClickListener() {
 //            @Override
@@ -51,17 +52,13 @@ public class StudySessionAdapter extends RecyclerView.Adapter<StudySessionAdapte
 
 
     public class ViewHolder extends RecyclerView.ViewHolder {
-
-//        public TextView nameTextView;
-//        public Button messageButton;
-
+        public TextView student;
+        public Spinner tutors;
 
         public ViewHolder(View itemView) {
-
             super(itemView);
-
-//            nameTextView = (TextView) itemView.findViewById(R.id.contact_name);
-//            messageButton = (Button) itemView.findViewById(R.id.message_button);
+            tutors = (Spinner) itemView.findViewById(R.id.tutorList);
+            student = (TextView) itemView.findViewById(R.id.students);
         }
     }
 }

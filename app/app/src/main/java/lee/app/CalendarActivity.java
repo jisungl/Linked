@@ -61,15 +61,7 @@ public class CalendarActivity extends AppCompatActivity {
         viewModel.getUpdateAttendee().observe(this, viewState -> {
             if (viewState == MainViewModel.ViewState.SUCCESS) {
                 Toast.makeText(this, "Your request is accepted", Toast.LENGTH_SHORT).show();
-//                SimpleDateFormat f = new SimpleDateFormat("yyyy-M-dd");
-//                try {
-//                    Date d = f.parse(selectedDate);
-//                    long milliseconds = d.getTime();
-//                    calendar.setDate(milliseconds);
                     calendarViewListener.onSelectedDayChange(calendar, selectedYear, selectedMonth, selectedDayOfMonth);
-//                } catch (ParseException e) {
-//                    e.printStackTrace();
-//                }
             } else if (viewState == MainViewModel.ViewState.ALREADY_EXIST) {
                 Toast.makeText(this, "You already requested for this date", Toast.LENGTH_SHORT).show();
             } else {

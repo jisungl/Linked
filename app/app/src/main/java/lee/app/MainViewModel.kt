@@ -11,6 +11,8 @@ class MainViewModel: ViewModel() {
     val login = MutableLiveData<ViewState>()
     val signUp = MutableLiveData<ViewState>()
     val updateAttendee = MutableLiveData<ViewState>()
+    val attendees = MutableLiveData<StudySession>()
+    val tutors = MutableLiveData<List<Person>>()
 
     fun login(id: String, password: String) {
         viewModelScope.launch(Dispatchers.IO) {
@@ -53,6 +55,29 @@ class MainViewModel: ViewModel() {
             when (repository.removeAttendee(date, Session.person)) {
                 is Response.Success<StudySession> -> updateAttendee.postValue(ViewState.SUCCESS )
                 else -> updateAttendee.postValue(ViewState.FAILURE)
+            }
+        }
+    }
+
+    fun getAttendee(date: String) {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.getStudySession(date)) {
+                is Response.Success<StudySession> -> {
+                    updateAttendee.postValue(ViewState.SUCCESS)
+                    attendees.postValue(result.data)
+                }
+                is Response.NotExist -> updateAttendee.postValue(ViewState.NOT_EXIST)
+                else -> updateAttendee.postValue(ViewState.FAILURE)
+            }
+        }
+    }
+
+    fun loadTutors() {
+        viewModelScope.launch(Dispatchers.IO) {
+            when (val result = repository.tutors) {
+                is Response.Success<List<Person>> -> {
+                    tutors.postValue(result.data);
+                }
             }
         }
     }

@@ -8,10 +8,12 @@ import com.microsoft.azure.storage.StorageException;
 import com.microsoft.azure.storage.blob.CloudBlobClient;
 import com.microsoft.azure.storage.blob.CloudBlobContainer;
 import com.microsoft.azure.storage.blob.CloudBlockBlob;
+import com.microsoft.azure.storage.blob.ListBlobItem;
 
 import java.io.IOException;
 import java.net.URISyntaxException;
 import java.security.InvalidKeyException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Repository {
@@ -21,6 +23,7 @@ public class Repository {
 
     public static final String StorageMeetingContainer = "0224jisungmeeting";
     public static final String StoragePersonContainer = "0224jisungperson";
+    public static final String StorageTutorsContainer = "0224jisungtutors";
 
     private Gson gson = new Gson();
 
@@ -41,9 +44,39 @@ public class Repository {
         }
     }
 
-    public Response<Person> createPerson(Person person)  {
+    public Response<List<Person>> getTutors()  {
+        List<Person> tutors = new ArrayList<>();
         try {
-            CloudBlobContainer container = getPersonContainer();
+            CloudBlobContainer container = getTutorsContainer();
+            Iterable<ListBlobItem> blobs = container.listBlobs();
+
+            blobs.forEach(listBlobItem -> {
+                if (listBlobItem instanceof CloudBlockBlob) {
+                    Person tutor = null;
+                    try {
+                        tutor = gson.fromJson(((CloudBlockBlob)listBlobItem).downloadText(), Person.class);
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    tutors.add(tutor);
+                }
+            });
+            return new Response.Success<>(tutors);
+        } catch (Exception e) {
+            return new Response.Failure();
+        }
+    }
+
+    public Response<Person> createPerson(Person person)  {
+        CloudBlobContainer container;
+
+        try {
+            if (person.accountType.equals("Teacher")) {
+                container = getTutorsContainer();
+            } else {
+                container = getPersonContainer();
+            }
+
             CloudBlockBlob blob = container.getBlockBlobReference(person.id);
 
             if (blob.exists()) {
@@ -166,6 +199,12 @@ public class Repository {
         CloudStorageAccount account = CloudStorageAccount.parse(StorageConnectionString);
         CloudBlobClient blobClient = account.createCloudBlobClient();
         return blobClient.getContainerReference(StorageMeetingContainer);
+    }
+
+    private CloudBlobContainer getTutorsContainer() throws URISyntaxException, InvalidKeyException, StorageException {
+        CloudStorageAccount account = CloudStorageAccount.parse(StorageConnectionString);
+        CloudBlobClient blobClient = account.createCloudBlobClient();
+        return blobClient.getContainerReference(StorageTutorsContainer);
     }
 }
 
