@@ -59,7 +59,12 @@ public class SignupActivity extends AppCompatActivity {
         viewModel.getSignUp().observe(this, viewState -> {
             if (viewState == ViewState.SUCCESS) {
                 Toast.makeText(this, "Sign up successful!", Toast.LENGTH_SHORT).show();
-                Intent myIntent = new Intent(SignupActivity.this, CalendarActivity.class);
+                Intent myIntent;
+                if (Session.person.accountType.equals("Teacher")) {
+                    myIntent = new Intent(SignupActivity.this, TutorActivity.class);
+                } else {
+                    myIntent = new Intent(SignupActivity.this, CalendarActivity.class);
+                }
                 startActivity(myIntent);
                 finish();
             } else if (viewState == ViewState.ALREADY_EXIST) {

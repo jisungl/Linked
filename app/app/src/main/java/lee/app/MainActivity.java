@@ -72,12 +72,14 @@ public class MainActivity extends AppCompatActivity {
         viewModel.getLogin().observe(this, viewState -> {
             if (viewState == ViewState.SUCCESS) {
                 Intent myIntent = new Intent(MainActivity.this, CalendarActivity.class);
-                Intent adminIntent = new Intent(MainActivity.this, AdminActivity.class);
                 if(Session.person.accountType.toLowerCase().equals("admin")) {
-                    startActivity(adminIntent);
+                    myIntent = new Intent(MainActivity.this, AdminActivity.class);
+                } else if (Session.person.accountType.toLowerCase().equals("teacher")) {
+                    myIntent = new Intent(MainActivity.this, TutorActivity.class);
                 } else {
-                    startActivity(myIntent);
+                    myIntent = new Intent(MainActivity.this, CalendarActivity.class);
                 }
+                startActivity(myIntent);
                 finish();
             } else if (viewState == ViewState.WRONG_PASSWORD) {
                 Toast.makeText(this, "The Password is Incorrect", Toast.LENGTH_SHORT).show();

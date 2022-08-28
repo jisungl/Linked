@@ -6,6 +6,7 @@ import android.util.Pair;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CalendarView;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,18 +28,16 @@ public class AdminActivity extends AppCompatActivity {
     CalendarView calendar;
     MainViewModel viewModel;
     TextView viewDate;
-    TextView viewDay;
-    TextView viewTutor;
+    ProgressBar progressBar;
     Calendar c;
-    Button cancelButton;
-    TextView studentName;
-    String selectedDate;
     CalendarView.OnDateChangeListener calendarViewListener;
     int selectedYear;
     int selectedMonth;
     int selectedDayOfMonth;
     Spinner tutors;
     RecyclerView recyclerView;
+    String selectedDate;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,49 +47,41 @@ public class AdminActivity extends AppCompatActivity {
 
         viewModel = new ViewModelProvider(this).get(MainViewModel.class);
 
-        setCalendarViewListener();
+        progressBar = findViewById(R.id.progressBar);
         calendar = (CalendarView) findViewById(R.id.calendarView2);
-        viewDate = (TextView) findViewById(R.id.textDate);
-        viewDay = (TextView) findViewById(R.id.textDay);
-        viewTutor = (TextView) findViewById(R.id.textTutor);
+        viewDate = (TextView) findViewById(R.id.textDate1);
         c = Calendar.getInstance();
-        cancelButton = (Button) findViewById(R.id.cancelButton);
-        cancelButton.setVisibility(View.GONE);
-        studentName = (TextView) findViewById(R.id.studentName);
         recyclerView = (RecyclerView) findViewById(R.id.recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this, RecyclerView.VERTICAL, false));
         recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
-        viewModel.getAttendees().observe(this, studySession -> {
+        viewModel.loadTutors();
+
+        setCalendarViewListener();
+        calendar.setOnDateChangeListener(calendarViewListener);
+
+        int day = c.get(Calendar.DAY_OF_MONTH);
+//        viewDate.setText("" + day);
+
+        viewModel.getAttendeesWithTutors().observe(AdminActivity.this, studySession -> {
             setupAdapter(studySession);
         });
 
-        viewModel.loadTutors();
-
-        cancelButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (selectedDate == null) return;
-
-                viewModel.removeAttendee(selectedDate);
+        viewModel.getUpdateAttendee().observe(AdminActivity.this, viewState -> {
+            if (viewState == MainViewModel.ViewState.NOT_EXIST) {
+                Toast.makeText(AdminActivity.this, "No one signed up yet", Toast.LENGTH_SHORT).show();
+                recyclerView.setAdapter(null);
             }
+            progressBar.setVisibility(View.GONE);
+            calendar.setEnabled(true);
         });
-
-        updateUI();
     }
 
     private void setupAdapter(StudySession studySession) {
-        StudySessionAdapter adapter= new StudySessionAdapter(this, studySession);
+        StudySessionAdapter adapter= new StudySessionAdapter(this, studySession, viewModel, selectedDate, progressBar);
         recyclerView.setAdapter(adapter);
-    }
-
-    private void updateUI() {
-        studentName.setVisibility(View.GONE);
-        tutors.setVisibility(View.GONE);
-        int day = c.get(Calendar.DAY_OF_MONTH);
-        viewDate.setText("" + day);
-        viewDay.setText(LocalDate.now().getDayOfWeek().name());
-        calendar.setOnDateChangeListener(calendarViewListener);
+        progressBar.setVisibility(View.GONE);
+        calendar.setEnabled(true);
     }
 
     private void setCalendarViewListener() {
@@ -103,83 +94,12 @@ public class AdminActivity extends AppCompatActivity {
                     int month,
                     int dayOfMonth)
             {
-                selectedYear = year;
-                selectedMonth = month;
-                selectedDayOfMonth = dayOfMonth;
-
                 selectedDate = year + "-" + (month + 1) + "-" + dayOfMonth;
-//
-                LocalDate date = LocalDate.of(year, month+1, dayOfMonth);
-                String monthNameTemp = date.getMonth().toString();
-                String monthName = monthNameTemp.substring(0,1) +
-                        monthNameTemp.substring(1).toLowerCase();
-                List<Pair<String, Person>> matchingList = Session.person.matching;
-                String currentDate = "";
-                for (int i = 0; i < matchingList.size(); i++) {
-                    Pair<String, Person> matching = matchingList.get(i);
-                    currentDate = matching.first;
-                    Person tutor = matching.second;
-                    if (currentDate.equals(selectedDate)) {
-                        viewTutor.setText("Your assigned tutor for this day is " + tutor);
-                        cancelButton.setVisibility(View.VISIBLE);
-                        break;
-                    } else if(date.getDayOfWeek().toString() == "SUNDAY") {
-                        viewTutor.setText("You did not request");
-                        cancelButton.setVisibility(View.GONE);
-                    } else {
-                        viewTutor.setText("");
-                        cancelButton.setVisibility(View.GONE);
-                    }
-                }
 
                 viewDate.setText("" + dayOfMonth);
-                viewDay.setText(date.getDayOfWeek().toString());
-                AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                String dialogMsg = "";
-                if(currentDate.equals(selectedDate)) {
-                    return;
-                } else if(date.getDayOfWeek().toString() != "SUNDAY") {
-                    dialogMsg += "There is no class on this day";
-
-                } else if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "th of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 1) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "st of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 2) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "nd of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 3) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "rd of " +
-                            monthName + "?";
-                } else {
-                    dialogMsg = "Do you plan on attending on the " + dayOfMonth + "th of " +
-                            monthName + "?";
-                }
-
-                if(date.getDayOfWeek().toString() == "SUNDAY") {
-                    builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            viewModel.updateAttendee(selectedDate);
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Create the AlertDialog object and return
-                    builder.create().show();
-                } else {
-                    builder.setMessage(dialogMsg).setNegativeButton("ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Create the AlertDialog object and return
-                    builder.create().show();
-                }
-
+                viewModel.getAttendee(selectedDate);
+                progressBar.setVisibility(View.VISIBLE);
+                calendar.setEnabled(false);
             }
         };
     }

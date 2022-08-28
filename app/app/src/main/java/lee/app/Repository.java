@@ -29,16 +29,23 @@ public class Repository {
 
     public Response<Person> getPerson(String id)  {
         try {
-            CloudBlobContainer container = getPersonContainer();
-            CloudBlockBlob blob = container.getBlockBlobReference(id);
+            CloudBlobContainer containerTutor = getTutorsContainer();
+            CloudBlockBlob blobTutor = containerTutor.getBlockBlobReference(id);
 
-            if (blob.exists()) {
-                Person person = gson.fromJson(blob.downloadText(), Person.class);
+            if (blobTutor.exists()) {
+                Person person = gson.fromJson(blobTutor.downloadText(), Person.class);
                 return new Response.Success(person);
             } else {
-                return new Response.NotExist();
-            }
+                CloudBlobContainer containerStudent = getPersonContainer();
+                CloudBlockBlob blobStudent = containerStudent.getBlockBlobReference(id);
 
+                if (blobStudent.exists()) {
+                    Person person = gson.fromJson(blobStudent.downloadText(), Person.class);
+                    return new Response.Success(person);
+                } else {
+                    return new Response.NotExist();
+                }
+            }
         } catch (Exception e) {
             return new Response.Failure();
         }
@@ -71,7 +78,7 @@ public class Repository {
         CloudBlobContainer container;
 
         try {
-            if (person.accountType.equals("Teacher")) {
+            if (person.accountType.equals("Teacher") || person.accountType.equals("Admin")) {
                 container = getTutorsContainer();
             } else {
                 container = getPersonContainer();
@@ -91,7 +98,7 @@ public class Repository {
         }
     }
 
-    private Response<Person> updatePerson(Person person)  {
+    public Response<Person> updatePerson(Person person)  {
         try {
             CloudBlobContainer container = getPersonContainer();
             CloudBlockBlob blob = container.getBlockBlobReference(person.id);
@@ -115,6 +122,18 @@ public class Repository {
             } else {
                 return new Response.NotExist();
             }
+        } catch (Exception e) {
+            return new Response.Failure();
+        }
+    }
+
+    public Response<StudySession> updateStudySession(String date, StudySession studySession) {
+        try {
+            CloudBlobContainer container = getStudySessionContainer();
+            CloudBlockBlob blob = container.getBlockBlobReference(date);
+
+            blob.uploadText(gson.toJson(studySession));
+            return new Response.Success(studySession);
         } catch (Exception e) {
             return new Response.Failure();
         }

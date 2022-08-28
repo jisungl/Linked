@@ -33,7 +33,6 @@ public class CalendarActivity extends AppCompatActivity {
     Calendar c;
     Button cancelButton;
     TextView studentName;
-    Spinner tutors;
     String selectedDate;
     CalendarView.OnDateChangeListener calendarViewListener;
     int selectedYear;
@@ -60,8 +59,8 @@ public class CalendarActivity extends AppCompatActivity {
 
         viewModel.getUpdateAttendee().observe(this, viewState -> {
             if (viewState == MainViewModel.ViewState.SUCCESS) {
-                Toast.makeText(this, "Your request is accepted", Toast.LENGTH_SHORT).show();
-                    calendarViewListener.onSelectedDayChange(calendar, selectedYear, selectedMonth, selectedDayOfMonth);
+                Toast.makeText(this, "Update completed", Toast.LENGTH_SHORT).show();
+                calendarViewListener.onSelectedDayChange(calendar, selectedYear, selectedMonth, selectedDayOfMonth);
             } else if (viewState == MainViewModel.ViewState.ALREADY_EXIST) {
                 Toast.makeText(this, "You already requested for this date", Toast.LENGTH_SHORT).show();
             } else {
@@ -83,7 +82,6 @@ public class CalendarActivity extends AppCompatActivity {
 
     private void updateUI() {
         studentName.setVisibility(View.GONE);
-        tutors.setVisibility(View.GONE);
         int day = c.get(Calendar.DAY_OF_MONTH);
         viewDate.setText("" + day);
         viewDay.setText(LocalDate.now().getDayOfWeek().name());
@@ -112,12 +110,20 @@ public class CalendarActivity extends AppCompatActivity {
                         monthNameTemp.substring(1).toLowerCase();
                 List<Pair<String, Person>> matchingList = Session.person.matching;
                 String currentDate = "";
+
+                viewTutor.setText("");
+                cancelButton.setVisibility(View.GONE);
+
                 for (int i = 0; i < matchingList.size(); i++) {
                     Pair<String, Person> matching = matchingList.get(i);
                     currentDate = matching.first;
                     Person tutor = matching.second;
                     if (currentDate.equals(selectedDate)) {
-                        viewTutor.setText("Your assigned tutor for this day is " + tutor);
+                        if (tutor == null) {
+                            viewTutor.setText("Tutor will be assigned to you shortly");
+                        } else {
+                            viewTutor.setText("Your assigned tutor for this day is " + tutor.name);
+                        }
                         cancelButton.setVisibility(View.VISIBLE);
                         break;
                     } else if(date.getDayOfWeek().toString() == "SUNDAY") {
