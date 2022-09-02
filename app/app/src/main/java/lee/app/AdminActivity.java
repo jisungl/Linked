@@ -61,7 +61,7 @@ public class AdminActivity extends AppCompatActivity {
         calendar.setOnDateChangeListener(calendarViewListener);
 
         int day = c.get(Calendar.DAY_OF_MONTH);
-//        viewDate.setText("" + day);
+        viewDate.setText("" + day);
 
         viewModel.getAttendeesWithTutors().observe(AdminActivity.this, studySession -> {
             setupAdapter(studySession);

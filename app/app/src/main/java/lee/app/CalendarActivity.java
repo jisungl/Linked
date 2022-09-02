@@ -38,6 +38,7 @@ public class CalendarActivity extends AppCompatActivity {
     int selectedYear;
     int selectedMonth;
     int selectedDayOfMonth;
+    boolean shouldShowDialog = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -72,7 +73,7 @@ public class CalendarActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 if (selectedDate == null) return;
-
+                shouldShowDialog = false;
                 viewModel.removeAttendee(selectedDate);
             }
         });
@@ -120,7 +121,7 @@ public class CalendarActivity extends AppCompatActivity {
                     Person tutor = matching.second;
                     if (currentDate.equals(selectedDate)) {
                         if (tutor == null) {
-                            viewTutor.setText("Tutor will be assigned to you shortly");
+                            viewTutor.setText("A Tutor will be assigned to you shortly");
                         } else {
                             viewTutor.setText("Your assigned tutor for this day is " + tutor.name);
                         }
@@ -137,52 +138,55 @@ public class CalendarActivity extends AppCompatActivity {
 
                 viewDate.setText("" + dayOfMonth);
                 viewDay.setText(date.getDayOfWeek().toString());
-                AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
-                String dialogMsg = "";
-                if(currentDate.equals(selectedDate)) {
-                    return;
-                } else if(date.getDayOfWeek().toString() != "SUNDAY") {
-                    dialogMsg += "There is no class on this day";
 
-                } else if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "th of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 1) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "st of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 2) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "nd of " +
-                            monthName + "?";
-                } else if (dayOfMonth % 10 == 3) {
-                    dialogMsg += "Do you plan on attending on the " + dayOfMonth + "rd of " +
-                            monthName + "?";
-                } else {
-                    dialogMsg = "Do you plan on attending on the " + dayOfMonth + "th of " +
-                            monthName + "?";
+                if (shouldShowDialog) {
+                    AlertDialog.Builder builder = new AlertDialog.Builder(CalendarActivity.this);
+                    String dialogMsg = "";
+                    if(currentDate.equals(selectedDate)) {
+                        return;
+                    } else if(date.getDayOfWeek().toString() != "SUNDAY") {
+                        dialogMsg += "There is no class on this day";
+
+                    } else if(dayOfMonth == 11 || dayOfMonth== 12 || dayOfMonth == 13) {
+                        dialogMsg += "Do you plan on attending on the " + dayOfMonth + "th of " +
+                                monthName + "?";
+                    } else if (dayOfMonth % 10 == 1) {
+                        dialogMsg += "Do you plan on attending on the " + dayOfMonth + "st of " +
+                                monthName + "?";
+                    } else if (dayOfMonth % 10 == 2) {
+                        dialogMsg += "Do you plan on attending on the " + dayOfMonth + "nd of " +
+                                monthName + "?";
+                    } else if (dayOfMonth % 10 == 3) {
+                        dialogMsg += "Do you plan on attending on the " + dayOfMonth + "rd of " +
+                                monthName + "?";
+                    } else {
+                        dialogMsg = "Do you plan on attending on the " + dayOfMonth + "th of " +
+                                monthName + "?";
+                    }
+
+                    if(date.getDayOfWeek().toString() == "SUNDAY") {
+                        builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                viewModel.updateAttendee(selectedDate);
+                            }
+                        }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                        // Create the AlertDialog object and return
+                        builder.create().show();
+                    } else {
+                        builder.setMessage(dialogMsg).setNegativeButton("ok", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                // User cancelled the dialog
+                            }
+                        });
+                        // Create the AlertDialog object and return
+                        builder.create().show();
+                    }
                 }
-
-                if(date.getDayOfWeek().toString() == "SUNDAY") {
-                    builder.setMessage(dialogMsg).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            viewModel.updateAttendee(selectedDate);
-                        }
-                    }).setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Create the AlertDialog object and return
-                    builder.create().show();
-                } else {
-                    builder.setMessage(dialogMsg).setNegativeButton("ok", new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            // User cancelled the dialog
-                        }
-                    });
-                    // Create the AlertDialog object and return
-                    builder.create().show();
-                }
-
+                shouldShowDialog = true;
             }
         };
     }

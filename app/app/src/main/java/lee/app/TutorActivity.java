@@ -56,6 +56,9 @@ public class TutorActivity extends AppCompatActivity {
         progressBar = findViewById(R.id.progressBar);
         c = Calendar.getInstance();
 
+        int day = c.get(Calendar.DAY_OF_MONTH);
+        viewDate.setText("" + day);
+
         viewModel.getUpdateAttendee().observe(this, new Observer<MainViewModel.ViewState>() {
             @Override
             public void onChanged(MainViewModel.ViewState viewState) {

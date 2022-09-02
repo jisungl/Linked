@@ -32,7 +32,7 @@ public class SplashActivity extends AppCompatActivity {
                 // Start your app main activity
                 startActivity(i);
                 // close this activity
-//                finish();
+                finish();
             }
         }, delay);
     }
