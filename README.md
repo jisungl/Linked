@@ -6,7 +6,7 @@ A tutor-student scheduling Android app built for Sunday Study Room, a local tuto
 
 Sunday Study Room sessions ran weekly with a limited number of tutors and physical space. Students needed a way to request attendance for upcoming sessions and tutors needed to see who they were assigned, so this app allows me to match students to tutors each week without doing it manually over text.
 
-## How It Works
+## Logistics
 
 The app supports three account types, each with a different view:
 
