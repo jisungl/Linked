@@ -1,6 +1,6 @@
 # Linked
 
-A tutor-student scheduling Android app built for Sunday Study Room, a local tutoring organization I founded for K-8 students. The club had more students signing up than available tutoring slots could support, so I built this app to manage weekly attendance and automate tutor-student matching.
+A tutor-student scheduling Android App built for Sunday Study Room, a local tutoring organization I founded for K-8 students. The club had more students signing up than available tutoring slots could support, so I built this app to manage weekly attendance and automate tutor-student matching.
 
 ## Problem
 
